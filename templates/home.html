@@ -25,83 +25,445 @@
     />
 
     <style>
-      .form-control {
-        padding: 1.375rem 0.75rem !important;
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .main-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 15px;
+      }
+
+      .app-header {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      .app-header h3 {
+        margin: 0;
+        color: #667eea;
+        font-weight: 700;
+        font-size: 2rem;
+      }
+
+      .date-header {
+        background: white;
+        border-radius: 15px;
+        padding: 20px 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      }
+
+      .date-header h4 {
+        margin: 0 0 5px 0;
+        color: #333;
+        font-weight: 600;
+      }
+
+      .date-header p {
+        margin: 0;
+        color: #6c757d;
+        font-size: 0.95rem;
+      }
+
+      .task-section {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        height: 100%;
+        min-height: 500px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .task-section h5 {
+        margin: 0 0 20px 0;
+        color: #333;
+        font-weight: 600;
+        font-size: 1.25rem;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #f0f0f0;
+      }
+
+      .tasks-container {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 5px;
+        max-height: 450px;
+      }
+
+      .tasks-container::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .tasks-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+      }
+
+      .tasks-container::-webkit-scrollbar-thumb {
+        background: #667eea;
+        border-radius: 10px;
+      }
+
+      .tasks-container::-webkit-scrollbar-thumb:hover {
+        background: #5568d3;
+      }
+
+      .task-card {
+        background: #f8f9fa;
+        border: none;
+        border-radius: 10px;
+        margin-bottom: 12px;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+
+      .task-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .task-card .card-body {
+        padding: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+      }
+
+      .task-text {
+        flex: 1;
+        min-width: 200px;
+        word-wrap: break-word;
+        color: #333;
+        font-size: 1rem;
+        line-height: 1.5;
+      }
+
+      .task-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .btn {
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: none;
+        padding: 8px 16px;
+        font-size: 0.9rem;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .btn-success {
+        background: #28a745;
+      }
+
+      .btn-success:hover {
+        background: #218838;
+      }
+
+      .btn-danger {
+        background: #dc3545;
+      }
+
+      .btn-danger:hover {
+        background: #c82333;
+      }
+
+      .btn-primary {
+        background: #667eea;
+      }
+
+      .btn-primary:hover {
+        background: #5568d3;
+      }
+
+      .btn i {
+        margin-right: 5px;
+      }
+
+      .btn-icon-only {
+        padding: 8px 12px;
+      }
+
+      .btn-icon-only i {
+        margin: 0;
+      }
+
+      .add-task-form {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-top: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .add-task-form .form-control {
+        border-radius: 10px;
+        border: 2px solid #e9ecef;
+        padding: 15px 20px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .add-task-form .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+      }
+
+      .add-task-form .btn {
+        border-radius: 10px;
+        padding: 15px 30px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      .input-group-custom {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+
+      .input-group-custom input {
+        flex: 1;
+        min-width: 250px;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: #6c757d;
+      }
+
+      .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        opacity: 0.5;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .app-header h3 {
+          font-size: 1.5rem;
+        }
+
+        .task-section {
+          min-height: 350px;
+          margin-bottom: 20px;
+        }
+
+        .tasks-container {
+          max-height: 350px;
+        }
+
+        .task-card .card-body {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .task-actions {
+          width: 100%;
+          justify-content: flex-start;
+        }
+
+        .btn {
+          font-size: 0.85rem;
+          padding: 6px 12px;
+        }
+
+        .input-group-custom {
+          flex-direction: column;
+        }
+
+        .input-group-custom input,
+        .add-task-form .btn {
+          width: 100%;
+          min-width: 100%;
+        }
+      }
+
+      @media (max-width: 576px) {
+        body {
+          padding: 10px 0;
+        }
+
+        .app-header,
+        .date-header,
+        .task-section,
+        .add-task-form {
+          padding: 15px;
+        }
+
+        .app-header h3 {
+          font-size: 1.3rem;
+        }
+
+        .task-text {
+          min-width: 100%;
+          font-size: 0.95rem;
+        }
+
+        .btn-text {
+          display: none;
+        }
+
+        .btn i {
+          margin: 0;
+        }
       }
     </style>
   </head>
   <body>
-    <div class="container">
-      <h3 class="pt-5 text-center">Django ToDo App</h3>
-      <div class="row">
-        <h4>My Day</h4>
-        <p class="text-muted">{% now "jS F Y" %}</p>
-        <div class="col-md-7 col-lg-7" style="height: 450px; overflow: scroll">
-          <!-- List of all the tasks for the day -->
-          {%for task in tasks%}
-          <div class="card m-1">
-            <div class="card-body">
-              {{task.task}}
-              <!-- Individual_task. field_name(task) -->
-              <span style="position: relative; float: right">
-                <a
-                  href="{% url 'mark_as_done' task.pk %}"
-                  class="btn btn-success"
-                  ><i class="fa fa-check"></i> Mark as Done</a
-                >
-                <a href="{% url 'delete_task' task.pk %}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
-                <a href="{% url 'edit_task' task.pk %}" class="btn btn-primary"><i class="fa fa-pencil"></i></a>
-              </span>
+    <div class="main-container">
+      <!-- App Header -->
+      <div class="app-header">
+        <h3><i class="fa fa-check-square-o"></i> Django ToDo App</h3>
+      </div>
+
+      <!-- Date Header -->
+      <div class="date-header">
+        <h4><i class="fa fa-calendar"></i> My Day</h4>
+        <p>{% now "l, jS F Y" %}</p>
+      </div>
+
+      <!-- Main Content -->
+      <div class="row g-3">
+        <!-- Pending Tasks -->
+        <div class="col-12 col-lg-7">
+          <div class="task-section">
+            <h5>
+              <i class="fa fa-list"></i> Pending Tasks ({{ tasks.count }})
+            </h5>
+            <div class="tasks-container">
+              {% if tasks %} {% for task in tasks %}
+              <div class="task-card card">
+                <div class="card-body">
+                  <div class="task-text">{{ task.task }}</div>
+                  <div class="task-actions">
+                    <a
+                      href="{% url 'mark_as_done' task.pk %}"
+                      class="btn btn-success"
+                      title="Mark as Done"
+                    >
+                      <i class="fa fa-check"></i>
+                      <span class="btn-text">Done</span>
+                    </a>
+                    <a
+                      href="{% url 'edit_task' task.pk %}"
+                      class="btn btn-primary"
+                      title="Edit Task"
+                    >
+                      <i class="fa fa-pencil"></i>
+                      <span class="btn-text">Edit</span>
+                    </a>
+                    <a
+                      href="{% url 'delete_task' task.pk %}"
+                      class="btn btn-danger btn-icon-only"
+                      title="Delete Task"
+                    >
+                      <i class="fa fa-trash"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              {% endfor %} {% else %}
+              <div class="empty-state">
+                <i class="fa fa-check-circle"></i>
+                <p>No pending tasks! Add a new task to get started.</p>
+              </div>
+              {% endif %}
             </div>
           </div>
-          {% endfor %}
         </div>
-        <div class="col-md-5 col-lg-5">
-          <h5>Completed Tasks</h5>
-          <!-- List of all the tasks that have completed -->
-          {% for ct in completed_tasks %}
-          <div class="card m-1">
-            <div class="card-body">
-              {{ct.task}}
-              <span style="position: relative; float: right">
-                <a
-                  href="{% url 'mark_as_undone' ct.pk %}"
-                  class="btn btn-danger"
-                  ><i class="fa fa-times"></i> Mark as undone</a
-                >
-              </span>
+
+        <!-- Completed Tasks -->
+        <div class="col-12 col-lg-5">
+          <div class="task-section">
+            <h5>
+              <i class="fa fa-check-circle"></i> Completed Tasks ({{
+              completed_tasks.count }})
+            </h5>
+            <div class="tasks-container">
+              {% if completed_tasks %} {% for ct in completed_tasks %}
+              <div class="task-card card">
+                <div class="card-body">
+                  <div
+                    class="task-text"
+                    style="text-decoration: line-through; opacity: 0.7"
+                  >
+                    {{ ct.task }}
+                  </div>
+                  <div class="task-actions">
+                    <a
+                      href="{% url 'mark_as_undone' ct.pk %}"
+                      class="btn btn-danger"
+                      title="Mark as Undone"
+                    >
+                      <i class="fa fa-times"></i>
+                      <span class="btn-text">Undone</span>
+                    </a>
+                    <a
+                      href="{% url 'delete_task' ct.pk %}"
+                      class="btn btn-danger btn-icon-only"
+                      title="Delete Task"
+                    >
+                      <i class="fa fa-trash"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              {% endfor %} {% else %}
+              <div class="empty-state">
+                <i class="fa fa-hourglass-half"></i>
+                <p>No completed tasks yet. Complete a task to see it here.</p>
+              </div>
+              {% endif %}
             </div>
           </div>
-          {% endfor %}
         </div>
       </div>
-      <div class="row">
-        <div
-          class="col-md-6 col-lg-6 p-0"
-          style="position: absolute; bottom: 50px"
-        >
-          <!-- To Do Form -->
-          <form action="{% url 'addTask' %}" method="POST">
-            {% csrf_token %}
-            <div class="form-group">
-              <span style="display: flex">
-                <input
-                  type="text"
-                  name="task"
-                  class="form-control"
-                  placeholder="Add a task"
-                />
-                <button
-                  type="submit"
-                  class="btn btn-primary"
-                  style="width: 200px"
-                >
-                  <i class="fa fa-plus"></i> Add
-                </button>
-              </span>
-            </div>
-          </form>
-        </div>
+
+      <!-- Add Task Form -->
+      <div class="add-task-form">
+        <form action="{% url 'addTask' %}" method="POST">
+          {% csrf_token %}
+          <div class="input-group-custom">
+            <input
+              type="text"
+              name="task"
+              class="form-control"
+              placeholder="What do you need to do today?"
+              required
+              autofocus
+            />
+            <button type="submit" class="btn btn-primary">
+              <i class="fa fa-plus"></i> Add Task
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </body>
